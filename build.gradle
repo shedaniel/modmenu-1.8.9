@@ -20,7 +20,6 @@ version = version + "+" + (ENV.BUILD_NUMBER ? ("build." + ENV.BUILD_NUMBER) : "c
 
 repositories {
 	mavenCentral()
-	mavenLocal()
 	jcenter()
 	maven {
 		name = 'Fabric'

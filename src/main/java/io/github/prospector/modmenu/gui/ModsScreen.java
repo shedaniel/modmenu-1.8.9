@@ -266,10 +266,13 @@ public class ModsScreen extends Screen {
 	}
 
 	@Override
-	protected void method_2784(int i, int j, int k) {
+	protected void mouseClicked(int i, int j, int k) {
+		searchBox.mouseClicked(i, j, k);
+		if (searchBox.isFocused())
+			return;
 		if (modList.mouseClicked(i, j, k))
 			return;
-		super.method_2784(i, j, k);
+		super.mouseClicked(i, j, k);
 	}
 
 	@Override
