@@ -3,9 +3,9 @@
   "package": "io.github.prospector.modmenu.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "MixinEntryListWidgetEntries",
     "MixinGameMenuScreen",
-    "MixinTitleScreen"
+    "MixinTitleScreen",
+    "TextRendererHooks"
   ],
   "injectors": {
     "defaultRequire": 1

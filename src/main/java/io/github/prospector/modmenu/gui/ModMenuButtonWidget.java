@@ -5,7 +5,14 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 
 public class ModMenuButtonWidget extends ButtonWidget {
-	public ModMenuButtonWidget(int x, int y, int width, int height, String text, Screen screen) {
-		super(x, y, width, height, text, button -> MinecraftClient.getInstance().openScreen(new ModsScreen(screen)));
+	private Screen screen;
+	
+	public ModMenuButtonWidget(int id, int x, int y, String text, Screen screen) {
+		super(id, x, y, text);
+		this.screen = screen;
+	}
+	
+	public void onClick() {
+		MinecraftClient.getInstance().openScreen(new ModsScreen(screen));
 	}
 }

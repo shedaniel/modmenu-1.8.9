@@ -1,6 +1,6 @@
 package io.github.prospector.modmenu.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.util.Identifier;
@@ -12,16 +12,16 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 	private final int uWidth;
 	private final int vHeight;
 
-	protected ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, PressAction onPress) {
-		this(x, y, width, height, u, v, texture, 256, 256, onPress);
+	protected ModMenuTexturedButtonWidget(int id, int x, int y, int width, int height, int u, int v, Identifier texture) {
+		this(id, x, y, width, height, u, v, texture, 256, 256);
 	}
 
-	protected ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress) {
-		this(x, y, width, height, u, v, texture, uWidth, vHeight, onPress, "");
+	protected ModMenuTexturedButtonWidget(int id, int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight) {
+		this(id, x, y, width, height, u, v, texture, uWidth, vHeight, "");
 	}
 
-	protected ModMenuTexturedButtonWidget(int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress, String message) {
-		super(x, y, width, height, message, onPress);
+	protected ModMenuTexturedButtonWidget(int id, int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, String message) {
+		super(id, x, y, width, height, message);
 		this.uWidth = uWidth;
 		this.vHeight = vHeight;
 		this.u = u;
@@ -35,19 +35,19 @@ public class ModMenuTexturedButtonWidget extends ButtonWidget {
 	}
 
 	@Override
-	public void renderButton(int mouseX, int mouseY, float delta) {
-		MinecraftClient client = MinecraftClient.getInstance();
+	public void render(MinecraftClient client, int mouseX, int mouseY) {
 		client.getTextureManager().bindTexture(this.texture);
-		RenderSystem.color4f(1, 1, 1, 1f);
-		RenderSystem.disableDepthTest();
+		this.focused = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+		GlStateManager.color4f(1, 1, 1, 1f);
+		GlStateManager.disableDepthTest();
 		int adjustedV = this.v;
 		if (!active) {
 			adjustedV += this.height * 2;
-		} else if (this.isHovered()) {
+		} else if (this.focused) {
 			adjustedV += this.height;
 		}
 
-		blit(this.x, this.y, this.u, adjustedV, this.width, this.height, this.uWidth, this.vHeight);
-		RenderSystem.enableDepthTest();
+		method_2444(this.x, this.y, this.u, adjustedV, this.width, this.height, this.uWidth, this.vHeight);
+		GlStateManager.enableDepthTest();
 	}
 }

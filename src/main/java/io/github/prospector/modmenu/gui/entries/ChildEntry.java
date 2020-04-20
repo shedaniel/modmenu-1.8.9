@@ -16,8 +16,8 @@ public class ChildEntry extends ModListEntry {
 	}
 
 	@Override
-	public void render(int index, int y, int x, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean isSelected, float delta) {
-		super.render(index, y, x, rowWidth, rowHeight, mouseX, mouseY, isSelected, delta);
+	public void render(int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered) {
+		super.render(index, x, y, rowWidth, rowHeight, mouseX, mouseY, hovered);
 		x += 4;
 		int color = 0xFFA0A0A0;
 		DrawableHelper.fill(x, y - 2, x + 1, y + (bottomChild ? rowHeight / 2 : rowHeight + 2), color);

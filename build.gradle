@@ -3,7 +3,7 @@ plugins {
 	id 'maven-publish'
 	id 'idea'
 	id 'eclipse'
-	id 'fabric-loom' version '0.2.6-SNAPSHOT'
+	id 'fabric-loom' version '0.2.7-SNAPSHOT'
 	id 'com.matthewprenger.cursegradle' version '1.4.0'
 	id 'net.dumbcode.gradlehook' version '1.3.1'
 }
@@ -18,15 +18,44 @@ group = project.maven_group
 def ENV = System.getenv()
 version = version + "+" + (ENV.BUILD_NUMBER ? ("build." + ENV.BUILD_NUMBER) : "custom")
 
+repositories {
+	mavenCentral()
+	mavenLocal()
+	jcenter()
+	maven {
+		name = 'Fabric'
+		url = 'http://maven.modmuss50.me/'
+	}
+	maven {
+		name = 'SpongePowered'
+		url = 'http://repo.spongepowered.org/maven'
+	}
+	maven {
+		name = 'mojang'
+		url = 'https://libraries.minecraft.net/'
+	}
+	maven {
+		name = 'legacy-fabric'
+		url = 'https://dl.bintray.com/legacy-fabric/Legacy-Fabric-Maven'
+	}
+}
+
 dependencies {
+	compile "com.google.guava:guava:23.5-jre"
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
-	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	modCompile("net.fabricmc:fabric-loader-1.8.9:${project.loader_version}") {
+		exclude module: "guava"
+	}
+	modCompile("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 }
 
 minecraft {
 	refmapName = 'modmenu.refmap.json'
+	accessWidener = file("src/main/resources/modmenu.aw")
+	intermediaryUrl = {
+		return "https://dl.bintray.com/legacy-fabric/Legacy-Fabric-Maven/net/fabricmc/intermediary/" + it + "/intermediary-" + it + "-v2.jar";
+	}
 }
 
 processResources {
@@ -41,6 +70,7 @@ processResources {
 		exclude "fabric.mod.json"
 	}
 }
+
 tasks.withType(JavaCompile) {
 	options.encoding = "UTF-8"
 }
@@ -81,8 +111,6 @@ publishing {
 		}
 	}
 }
-
-import com.matthewprenger.cursegradle.CurseArtifact
 
 def fullChangelogBuilder = StringBuilder.newInstance()
 def curseReleaseType = "release"
@@ -199,7 +227,7 @@ curseforge {
 		mainArtifact(file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
 		mainArtifact.displayName = "$project.project_name v$project.mod_version for $project.minecraft_version"
 		addArtifact sourcesJar
-		additionalArtifacts.forEach { artifact -> artifact.displayName = "$project.project_name v$project.mod_version for $project.minecraft_version"}
+		additionalArtifacts.forEach { artifact -> artifact.displayName = "$project.project_name v$project.mod_version for $project.minecraft_version" }
 		relations {
 			if (!project.curseforge_required_dependencies.isEmpty()) {
 				project.curseforge_required_dependencies.split(", ").each {
